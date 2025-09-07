@@ -1,0 +1,23 @@
+# Loki Setup Instructions
+
+1. Remove old Loki container (if any):
+   docker rm -f loki
+
+2. Start a fresh Loki container:
+   docker run -d --name=loki -p 3100:3100 grafana/loki:2.9.0
+
+3. Send a test log into Loki:
+   curl -H "Content-Type: application/json" -X POST "http://localhost:3100/loki/api/v1/push" -d "{
+     \"streams\": [
+       {
+         \"stream\": {\"job\":\"devops-demo\"},
+         \"values\": [[\"<timestamp>\", \"Hello from DevOps Loki!\"]]
+       }
+     ]
+   }"
+
+4. Verify logs:
+   curl "http://localhost:3100/loki/api/v1/query?query={job=\"devops-demo\"}"
+
+Author: Pushpender Singh
+Date: 07-Sep-2025
